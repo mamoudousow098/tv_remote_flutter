@@ -1,0 +1,73 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ===== Réseau (mode Wi-Fi) ===== -->
+    <!-- Sockets TCP/UDP vers la TV -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Savoir si on est sur un Wi-Fi (message "Wi-Fi désactivé") -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- MulticastLock : sans lui, beaucoup de téléphones filtrent les réponses SSDP/mDNS -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <!-- Android 13+ : permission "Appareils Wi-Fi à proximité", sans localisation.
+         Android 16 s'en sert provisoirement comme permission réseau local
+         quand la protection du réseau local est activée (test/opt-in). -->
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="33" />
+
+    <!-- Android 17 : accès au réseau local soumis à permission d'exécution
+         pour les applis qui ciblent l'API 37+. Déclarée dès maintenant
+         (ignorée par les versions qui ne la connaissent pas). -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
+    <!-- ===== Infrarouge ===== -->
+    <uses-permission android:name="android.permission.TRANSMIT_IR" />
+
+    <!-- Aucun matériel n'est obligatoire : l'appli s'installe partout
+         et masque ce qui manque. -->
+    <uses-feature android:name="android.hardware.consumerir" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+
+    <!-- usesCleartextTraffic : Roku (HTTP 8060), Samsung 8001 (ws://), Sony,
+         Philips parlent en clair sur le réseau local. Android interdit le
+         clair par défaut depuis l'API 28 ; la config réseau ne permet pas de
+         l'autoriser par plage d'IP privées, d'où ce réglage global. -->
+    <application
+        android:label="Télécommande"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- Ne pas supprimer : utilisé par l'outil Flutter pour enregistrer les plugins -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+
+    <!-- Requis par Flutter pour le traitement de texte (sélection, etc.) -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+</manifest>

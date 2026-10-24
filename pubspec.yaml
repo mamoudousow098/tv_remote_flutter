@@ -1,0 +1,32 @@
+name: tv_remote
+description: Télécommande universelle pour Smart TV (infrarouge + Wi-Fi).
+publish_to: 'none'
+
+# versionName + versionCode Android (versionCode = nombre après le +)
+version: 0.1.0+1
+
+environment:
+  # Flutter stable récent (Dart 3.8 minimum, pour les records/pattern matching et Riverpod 3)
+  sdk: ^3.8.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Gestion d'état : Riverpod 3, providers déclarés à la main (pas de génération de code)
+  flutter_riverpod: ^3.0.0
+
+  # Ajoutés aux étapes suivantes (avec `flutter pub add`, pour obtenir la dernière version compatible) :
+  #   étape 2 : aucune dépendance (MethodChannel maison vers ConsumerIrManager)
+  #   étape 3 : multicast_dns (mDNS), network_info_plus (adresse IP du Wi-Fi)
+  #   étape 4 : web_socket_channel, http, flutter_secure_storage, shared_preferences
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # Étape 2 : la base de codes IR sera déclarée ici
+  # assets:
+  #   - assets/ir/
